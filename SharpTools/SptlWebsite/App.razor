@@ -1,0 +1,27 @@
+﻿@using Microsoft.FluentUI.AspNetCore.Components.DesignTokens
+
+@inject NavigationManager Navigation
+@inject TypeRampBaseFontSize BaseFontSize
+
+<ErrorBoundary>
+    <ChildContent>
+        <Router AppAssembly="@typeof(App).Assembly">
+            <Found Context="routeData">
+                <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+            </Found>
+            <NotFound>
+                @{
+                    var uri = Navigation.GetUriWithQueryParameters(
+                        "/NotFound", new Dictionary<string, object?>()
+                        {
+                            ["OriginalUri"] = Navigation.Uri
+                        });
+                    Navigation.NavigateTo(uri);
+                }
+            </NotFound>
+        </Router>
+    </ChildContent>
+    <ErrorContent Context="ex">
+        <ErrorComponent Exception="ex"></ErrorComponent>
+    </ErrorContent>
+</ErrorBoundary>

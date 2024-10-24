@@ -1,0 +1,33 @@
+﻿@inherits LayoutComponentBase
+@inject NavigationManager Navigation
+@inject IGradedLocalStorage LocalStorage
+
+<FluentLayout>
+    <FluentHeader>
+        SharpTools
+    </FluentHeader>
+
+    <FluentSplitter Class="main" Orientation="Orientation.Horizontal" Panel1Size="@navMenuSize" OnResized="@((e) => this.SaveNavMenuSize(e.Panel1Size))">
+
+        <Panel1>
+            <FluentNavMenu>
+                <FluentNavLink Href="/" Match="NavLinkMatch.All">主页</FluentNavLink>
+
+                <FluentNavGroup Title="编程工具">
+                    <FluentNavLink Href="/GuidGenerator">Guid 生成器</FluentNavLink>
+                    <FluentNavLink Href="/QrCodeScanner">QR 码扫描器</FluentNavLink>
+                    <FluentNavLink Href="/BytesRepresentations">字节数组表示</FluentNavLink>
+                </FluentNavGroup>
+            </FluentNavMenu>
+        </Panel1>
+
+        <Panel2>
+            <FluentBodyContent Class="body-content">
+                <div class="content">
+                    @Body
+                </div>
+            </FluentBodyContent>
+        </Panel2>
+
+    </FluentSplitter>
+</FluentLayout>

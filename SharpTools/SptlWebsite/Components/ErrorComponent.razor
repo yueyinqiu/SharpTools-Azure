@@ -1,0 +1,34 @@
+﻿<PageTitle>发生错误 - SharpTools</PageTitle>
+
+<FluentLayout>
+    <FluentHeader>
+        SharpTools
+    </FluentHeader>
+
+    <div class="main">
+        <FluentBodyContent Class="body-content">
+            <div class="content">
+
+                <h1>发生错误</h1>
+
+                <p>
+                    SharpTools 在运行过程中出现了错误。您可以尝试刷新页面或者清空此网站的 Local Storage 。
+                </p>
+
+                <h2>联系方式</h2>
+
+                <p>
+                    如果您需要帮助，欢迎通过以下方式与我们联系：
+
+                    <ContactInformationComponent></ContactInformationComponent>
+                </p>
+
+                <h2>详细信息</h2>
+
+                <p style="white-space: pre-wrap">
+                    @(this.Exception?.ToString() ?? "无");
+                </p>
+            </div>
+        </FluentBodyContent>
+    </div>
+</FluentLayout>
