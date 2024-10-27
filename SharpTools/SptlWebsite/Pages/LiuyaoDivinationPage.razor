@@ -1,0 +1,74 @@
+﻿@page "/LiuyaoDivination"
+
+@using YiJingFramework.EntityRelations.EntityStrings.Extensions;
+
+@inject IGradedLocalStorage LocalStorage
+@inject IBuiltInZhouyiAccessor BuiltInZhouyi
+
+<PageTitle>六爻预测 - SharpTools</PageTitle>
+
+<FluentStack Orientation="Orientation.Vertical">
+    <h1>六爻预测</h1>
+
+    <p>
+        此工具仍在开发过程中，目前效果不代表最终结果。
+    </p>
+
+    <FluentCard AreaRestricted="false">
+        <FluentStack Orientation="Orientation.Vertical">
+            <h2>择时</h2>
+            <InlineNongliSolarDateTimePicker @bind-Value="nongliSolar"></InlineNongliSolarDateTimePicker>
+        </FluentStack>
+    </FluentCard>
+
+    <FluentCard AreaRestricted="false">
+        <FluentStack Orientation="Orientation.Vertical">
+            <h2>点卦</h2>
+            <div style="width: 100%; display: grid; grid: auto-flow / auto 1fr 1fr;">
+                <div style="width: 100%">
+                </div>
+
+                <div style="width: 100%">
+                    <FluentButton Style="width: 100%">
+                        @本卦?.Name
+                    </FluentButton>
+                </div>
+                <div style="width: 100%">
+                    <FluentButton Style="width: 100%">
+                        @之卦?.Name
+                    </FluentButton>
+                </div>
+
+                @for (int iDontTouchMe = 6 - 1; iDontTouchMe >= 0; iDontTouchMe--)
+                {
+                    var 爻 = iDontTouchMe;
+
+                    <div style="width: 100%">
+                        <FluentButton Style="width: 100%" OnClick="() => 设置单拆重交(爻)">
+                            @(设置的单拆重交[爻]?.ToString() ?? "？")
+                        </FluentButton>
+                    </div>
+
+                    <div style="width: 100%">
+                        <FluentButton Style="width: 100%; background:none; border:none;">
+                            @本卦爻字符串(爻)
+                        </FluentButton>
+                    </div>
+
+                    <div style="width: 100%">
+                        <FluentButton Style="width: 100%;">
+                            @之卦爻字符串(爻)
+                        </FluentButton>
+                    </div>
+                }
+            </div>
+        </FluentStack>
+    </FluentCard>
+    <FluentCard AreaRestricted="false">
+        <FluentStack Orientation="Orientation.Vertical">
+            <h2>参考</h2>
+            <FluentTextArea Style="width: 100%">
+            </FluentTextArea>
+        </FluentStack>
+    </FluentCard>
+</FluentStack>
