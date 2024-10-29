@@ -2,13 +2,12 @@
 using SptlServices.GradedLocalStoraging;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
-using System.Text.Json.Serialization;
 
 namespace SptlWebsite.Layout;
 
-partial class MainLayout
+public partial class MainLayout
 {
-    private readonly static ImmutableArray<Icon> alphabetIcons = [
+    private static readonly ImmutableArray<Icon> alphabetIcons = [
         FluentUiBlazorMdiSvgIcons.MdiSvg.AlphaABoxOutline(IconVariant.Regular, IconSize.Size24),
         FluentUiBlazorMdiSvgIcons.MdiSvg.AlphaBBoxOutline(IconVariant.Regular, IconSize.Size24),
         FluentUiBlazorMdiSvgIcons.MdiSvg.AlphaCBoxOutline(IconVariant.Regular, IconSize.Size24),
@@ -65,33 +64,29 @@ partial class MainLayout
             var ordered = group.Entries.OrderBy(x => x.Pinyin).ToImmutableArray();
             orderedGroups.Add(group with { Entries = ordered });
         }
-        Groups = orderedGroups.OrderBy(x => x.Pinyin).ToImmutableArray();
+        Groups = [.. orderedGroups.OrderBy(x => x.Pinyin)];
     }
 
-    [JsonSerializable(typeof(int))]
-    partial class MainLayoutSerializerContext : JsonSerializerContext { }
+    private ILocalStorageEntry<double> NavMenuRatioStorageEntry =>
+        this.LocalStorage.GetEntry<double>("MainLayout.NavMenuRatio", 1000);
 
-    private ILocalStorageEntry<int> NavMenuSizeStorageEntry =>
-        this.LocalStorage.GetEntry(
-            "MainLayout.NavMenuSize", 1000,
-            MainLayoutSerializerContext.Default.Int32);
-
-    private string navMenuSize = "250px";
+    private string panel1Size = "250px";
 
     // https://github.com/microsoft/fluentui-blazor/issues/2858
     [DynamicDependency(DynamicallyAccessedMemberTypes.All, typeof(SplitterResizedEventArgs))]
-    private void SaveNavMenuSize(int navMenuSize)
+    private void SaveNavMenuRatio(SplitterResizedEventArgs e)
     {
-        this.NavMenuSizeStorageEntry.Set(navMenuSize);
+        var ratio = (double)e.Panel1Size / (e.Panel1Size + e.Panel2Size);
+        this.NavMenuRatioStorageEntry.Set(ratio);
     }
 
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
 
-        if(this.NavMenuSizeStorageEntry.TryGet(out var navMenuSize))
+        if (this.NavMenuRatioStorageEntry.TryGet(out var navMenuSize))
         {
-            this.navMenuSize = $"{navMenuSize}px";
+            this.panel1Size = $"{navMenuSize * 100}%";
             this.StateHasChanged();
         }
     }

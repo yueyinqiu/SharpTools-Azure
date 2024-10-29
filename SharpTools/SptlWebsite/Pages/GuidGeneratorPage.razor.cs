@@ -1,11 +1,9 @@
 ﻿using SptlServices.GradedLocalStoraging;
 using System.Collections.Immutable;
-using System.Diagnostics;
-using System.Text.Json.Serialization;
 
 namespace SptlWebsite.Pages;
 
-partial class GuidGeneratorPage
+public partial class GuidGeneratorPage
 {
     private sealed record GuidFormat(string Name, Func<Guid, string> Converter);
 
@@ -44,13 +42,8 @@ partial class GuidGeneratorPage
 
     internal sealed record Preferences(string FormatName, int Count);
 
-    [JsonSerializable(typeof(Preferences))]
-    partial class GuidGeneratorPageSerializerContext : JsonSerializerContext { }
-
     private ILocalStorageEntry<Preferences> PreferenceStorage =>
-        this.LocalStorage.GetEntry(
-            "GuidGeneratorPage.Preferences", 500,
-            GuidGeneratorPageSerializerContext.Default.Preferences);
+        this.LocalStorage.GetEntry<Preferences>("GuidGeneratorPage.Preferences", 500);
 
     protected override void OnParametersSet()
     {
@@ -67,12 +60,12 @@ partial class GuidGeneratorPage
 
     private void SavePreference()
     {
-        this.PreferenceStorage.Set(new(this.FormatInput.Name, countInput));
+        this.PreferenceStorage.Set(new(this.FormatInput.Name, this.countInput));
     }
 
     private void ButtonClick()
     {
-        this.outputs = Enumerable.Range(0, countInput)
+        this.outputs = Enumerable.Range(0, this.countInput)
             .Select(_ => Guid.NewGuid())
             .ToImmutableArray();
 

@@ -1,19 +1,18 @@
 ﻿using Microsoft.FluentUI.AspNetCore.Components;
 using SptlServices.GradedLocalStoraging;
 using System.Collections.Immutable;
-using System.Text.Json.Serialization;
 
 namespace SptlWebsite.Pages;
 
-partial class BytesRepresentationsPage
+public partial class BytesRepresentationsPage
 {
     private BytesFormat inputFormatDontTouchMe = formats.Single(x => x.Name is "字节数组");
     private BytesFormat InputFormat
     {
-        get => inputFormatDontTouchMe;
+        get => this.inputFormatDontTouchMe;
         set
         {
-            inputFormatDontTouchMe = value;
+            this.inputFormatDontTouchMe = value;
             this.CacheInputBytes();
             this.SavePreference();
         }
@@ -21,11 +20,11 @@ partial class BytesRepresentationsPage
     private BytesFormat outputFormatDontTouchMe = formats.Single(x => x.Name is "Base64");
     private BytesFormat OutputFormat
     {
-        get => outputFormatDontTouchMe;
+        get => this.outputFormatDontTouchMe;
         set
         {
-            outputFormatDontTouchMe = value;
-            SavePreference();
+            this.outputFormatDontTouchMe = value;
+            this.SavePreference();
         }
     }
 
@@ -36,11 +35,11 @@ partial class BytesRepresentationsPage
         .FromBytes([.. helloWorld]);
     private string Input
     {
-        get => inputDontTouchMe;
+        get => this.inputDontTouchMe;
         set
         {
-            inputDontTouchMe = value;
-            CacheInputBytes();
+            this.inputDontTouchMe = value;
+            this.CacheInputBytes();
         }
     }
 
@@ -50,16 +49,16 @@ partial class BytesRepresentationsPage
     {
         if (string.IsNullOrWhiteSpace(this.Input))
         {
-            inputBytes = ([], null);
+            this.inputBytes = ([], null);
             return;
         }
         try
         {
-            inputBytes = (InputFormat.ToBytes(this.Input), null);
+            this.inputBytes = (this.InputFormat.ToBytes(this.Input), null);
         }
         catch (Exception ex)
         {
-            inputBytes = (null, ex);
+            this.inputBytes = (null, ex);
         }
     }
 
@@ -67,11 +66,11 @@ partial class BytesRepresentationsPage
     {
         get
         {
-            var (bytes, ex) = inputBytes;
+            var (bytes, ex) = this.inputBytes;
             if (bytes is not null)
-                return OutputFormat.FromBytes(bytes);
+                return this.OutputFormat.FromBytes(bytes);
             else if (ex is not null)
-                return $"转换失败：{Environment.NewLine}{ex.ToString()}";
+                return $"转换失败：{Environment.NewLine}{ex}";
             else
                 return $"转换失败。";
         }
@@ -102,7 +101,7 @@ partial class BytesRepresentationsPage
 
     private void Swap()
     {
-        var (bytes, _) = inputBytes;
+        var (bytes, _) = this.inputBytes;
         if (bytes is null)
             return;
         this.Input = this.Output;
@@ -112,7 +111,7 @@ partial class BytesRepresentationsPage
     }
     private void Export()
     {
-        var (bytes, _) = inputBytes;
+        var (bytes, _) = this.inputBytes;
         if (bytes is null)
             return;
         this.Downloader.Sync.Download(bytes, "bytes");
@@ -131,14 +130,8 @@ partial class BytesRepresentationsPage
     }
 
     private sealed record Preferences(string? InputFormat, string? OutputFormat);
-
-    [JsonSerializable(typeof(Preferences))]
-    partial class BytesRepresentationsPageSerializerContext : JsonSerializerContext { }
-
     private ILocalStorageEntry<Preferences> PreferenceStorage =>
-        this.LocalStorage.GetEntry(
-            "BytesRepresentationsPage.Preferences", 500,
-            BytesRepresentationsPageSerializerContext.Default.Preferences);
+        this.LocalStorage.GetEntry<Preferences>("BytesRepresentationsPage.Preferences", 500);
 
     protected override void OnParametersSet()
     {
