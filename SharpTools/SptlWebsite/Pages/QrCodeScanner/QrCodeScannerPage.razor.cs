@@ -2,7 +2,7 @@
 using SixLabors.ImageSharp;
 using System.Collections.Immutable;
 
-namespace SptlWebsite.Pages;
+namespace SptlWebsite.Pages.QrCodeScanner;
 
 public partial class QrCodeScannerPage
 {
