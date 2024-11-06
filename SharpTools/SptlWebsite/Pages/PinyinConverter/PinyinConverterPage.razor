@@ -1,0 +1,49 @@
+﻿@page "/PinyinConverter"
+@using hyjiacan.py4n
+
+@inject IGradedLocalStorage LocalStorage
+@inject IClipboardService ClipboardService
+
+<PageTitle>拼音转换器 - SharpTools</PageTitle>
+
+<FluentStack Orientation="Orientation.Vertical">
+    <h1>拼音转换器</h1>
+
+    <FluentCard AreaRestricted="false">
+        <FluentStack Orientation="Orientation.Vertical">
+            <h2>配置</h2>
+
+                <FluentSelect TOption="PinyinFormat" Label="声调" OptionText="GetOptionText" Items="toneFormats" @bind-SelectedOption="toneFormat">
+                </FluentSelect>
+                <FluentSelect TOption="PinyinFormat" Label="ü" OptionText="GetOptionText" Items="vFormats" @bind-SelectedOption="vFormat">
+                </FluentSelect>
+                <FluentSelect TOption="PinyinFormat" Label="大小写" OptionText="GetOptionText" Items="caseFormats" @bind-SelectedOption="caseFormat">
+                </FluentSelect>
+        </FluentStack>
+    </FluentCard>
+
+    <FluentCard AreaRestricted="false">
+        <FluentStack Orientation="Orientation.Vertical">
+            <h2>输入</h2>
+
+            <FluentTextField Placeholder="在这里输入内容" @bind-Value="input" AutoComplete="off"></FluentTextField>
+
+            <FluentButton OnClick="Convert">转换</FluentButton>
+        </FluentStack>
+    </FluentCard>
+
+    <FluentCard AreaRestricted="false">
+        <FluentStack Orientation="Orientation.Vertical">
+            <h2>输出</h2>
+            <div>
+                @foreach (var item in output)
+                {
+                    <FluentSelect TOption="string" @key="item" Style="vertical-align: middle" Width="auto" Items="item.AvailablePinyins" @bind-SelectedOption="item.SelectedPinyin"></FluentSelect>
+                }
+            </div>
+            <div>
+                <FluentButton OnClick="CopyAsync">复制</FluentButton>
+            </div>
+        </FluentStack>
+    </FluentCard>
+</FluentStack>
