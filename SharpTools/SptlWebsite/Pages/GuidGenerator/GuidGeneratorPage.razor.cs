@@ -25,36 +25,29 @@ public partial class GuidGeneratorPage
 
     private ImmutableArray<Guid> outputs = [];
     private int countInput = 1;
-    private GuidFormat formatInputDontTouchMe = formats.Single(
-        x => x.Name == "oooooooo-oooo-oooo-oooo-oooooooooooo");
     private GuidFormat FormatInput
     {
-        get
-        {
-            return this.formatInputDontTouchMe;
-        }
+        get;
         set
         {
-            this.formatInputDontTouchMe = value;
+            field = value;
             this.SavePreference();
         }
-    }
+    } = formats.Single(x => x.Name == "oooooooo-oooo-oooo-oooo-oooooooooooo");
 
     internal sealed record Preferences(string FormatName, int Count);
 
     private ILocalStorageEntry<Preferences> PreferenceStorage =>
-        this.LocalStorage.GetEntry<Preferences>("GuidGeneratorPage.Preferences", 500);
+        this.LocalStorage.GetEntry<Preferences>("GuidGeneratorPage.Preferences", Importance.SimpleOptions);
 
     protected override void OnParametersSet()
     {
-        if (this.PreferenceStorage.TryGet(out var preference))
+        if (this.PreferenceStorage.TryGet(out var preference) && preference is not null)
         {
-            if (preference is null)
-                return;
             this.countInput = Math.Clamp(preference.Count, 1, int.MaxValue);
             this.FormatInput = formats.FirstOrDefault(
                 x => x.Name == preference.FormatName,
-                formats.Single(x => x.Name == "oooooooo-oooo-oooo-oooo-oooooooooooo"));
+                this.FormatInput);
         }
     }
 

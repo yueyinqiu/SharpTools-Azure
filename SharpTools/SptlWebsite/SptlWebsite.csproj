@@ -4,16 +4,17 @@
 		<TargetFramework>net9.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
+		<!-- 为了使用 field 关键字 -->
 		<LangVersion>preview</LangVersion>
 		<ServiceWorkerAssetsManifest>service-worker-assets.js</ServiceWorkerAssetsManifest>
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <None Remove="Pages\MeihuaYishu\MeihuaYishuPage.razor.js" />
+		<None Remove="Pages\MeihuaYishu\MeihuaYishuPage.razor.js" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Content Include="Pages\MeihuaYishu\MeihuaYishuPage.razor.js" />
+		<Content Include="Pages\MeihuaYishu\MeihuaYishuPage.razor.js" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -46,12 +47,6 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\SptlServices\SptlServices.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Content Update="Pages\QrCodeScanner\QrCodeScannerPage.razor">
-	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-	  </Content>
 	</ItemGroup>
 
 </Project>
